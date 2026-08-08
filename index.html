@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#111827">
+  <title>Edinburgh Trip Navigator</title>
+  <link rel="preconnect" href="https://unpkg.com">
+  <link rel="preconnect" href="https://tile.openstreetmap.org">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIINfQ3ynHTB08MGV+oQkL2Zk1i0wD3MZzY=" crossorigin="">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div>
+      <div class="eyebrow">Edinburgh 2027</div>
+      <h1>Trip Navigator</h1>
+    </div>
+    <button id="emergencyBtn" class="emergency-btn" aria-label="Notfall und Hilfe öffnen">SOS</button>
+  </header>
+
+  <main>
+    <section class="controls card">
+      <div class="search-row">
+        <label class="search-box">
+          <span>Standort / Straße / Ecke / Koordinate</span>
+          <input id="locationInput" type="search"
+                 placeholder="z. B. Greyfriars, EH1 2QQ oder 55.9486,-3.1999">
+        </label>
+        <button id="searchBtn" class="primary">Suchen</button>
+        <button id="geoBtn" class="secondary">Mein Standort</button>
+      </div>
+
+      <div id="referenceInfo" class="reference-info">Referenzpunkt: keiner – Standardsortierung nach Name</div>
+
+      <div class="section-label">Kategorien</div>
+      <div id="categoryButtons" class="chip-wrap"></div>
+
+      <div class="section-label">Schnellfilter</div>
+      <div class="chip-wrap">
+        <button class="chip filter-chip" data-filter="food">🍽 Essen</button>
+        <button class="chip filter-chip" data-filter="whisky">🥃 Whisky</button>
+        <button class="chip filter-chip" data-filter="quiet">🤫 eher ruhig</button>
+        <button class="chip filter-chip" data-filter="rain">🌧 Regenoption</button>
+        <button class="chip filter-chip" data-filter="historic">🏚 historisch</button>
+        <button class="chip filter-chip" data-filter="creepy">👻 leicht düster</button>
+      </div>
+
+      <div class="sort-row">
+        <label>
+          Sortieren
+          <select id="sortSelect">
+            <option value="distance">Entfernung</option>
+            <option value="name">Name</option>
+            <option value="quiet">Ruhefaktor</option>
+            <option value="historic">Historisch</option>
+            <option value="whisky">Whisky</option>
+          </select>
+        </label>
+        <button id="clearBtn" class="ghost">Filter zurücksetzen</button>
+      </div>
+    </section>
+
+    <section class="summary-row">
+      <div><strong id="resultCount">0</strong> Treffer</div>
+      <div id="statusText">Daten werden geladen …</div>
+    </section>
+
+    <section class="workspace">
+      <div class="map-pane card">
+        <div id="map"></div>
+      </div>
+
+      <div class="list-pane">
+        <div id="poiList" class="poi-list"></div>
+      </div>
+    </section>
+  </main>
+
+  <button id="floatingEmergencyBtn" class="floating-sos" aria-label="Notfall und Hilfe öffnen">SOS</button>
+
+  <dialog id="emergencyDialog" class="emergency-dialog">
+    <div class="dialog-head">
+      <div>
+        <div class="eyebrow">Emergency & Help</div>
+        <h2>Notfall & Hilfe</h2>
+      </div>
+      <button id="closeEmergencyBtn" class="close-btn" aria-label="Schließen">×</button>
+    </div>
+
+    <div class="emergency-warning">
+      Bei akuter Lebensgefahr: <strong>999 oder 112</strong>.
+    </div>
+
+    <div class="quick-actions">
+      <a class="emergency-action red" href="tel:999">
+        <strong>999 / 112</strong><span>Ambulanz · Polizei · Feuerwehr · Küstenwache</span>
+      </a>
+      <a class="emergency-action blue" href="tel:111">
+        <strong>NHS 24 · 111</strong><span>dringend, aber nicht lebensbedrohlich</span>
+      </a>
+      <a class="emergency-action dark" href="tel:101">
+        <strong>Police · 101</strong><span>nicht-akute Polizeifälle</span>
+      </a>
+    </div>
+
+    <div id="emergencySections"></div>
+  </dialog>
+
+  <template id="poiTemplate">
+    <article class="poi-card">
+      <div class="poi-top">
+        <div>
+          <div class="poi-category"></div>
+          <h3 class="poi-name"></h3>
+        </div>
+        <div class="distance-badge"></div>
+      </div>
+      <div class="poi-address"></div>
+      <div class="badges"></div>
+      <div class="poi-grid">
+        <div><span>Öffnung</span><strong class="poi-hours"></strong></div>
+        <div><span>Preis</span><strong class="poi-price"></strong></div>
+        <div><span>Dauer</span><strong class="poi-duration"></strong></div>
+        <div><span>Besucher</span><strong class="poi-crowd"></strong></div>
+      </div>
+      <div class="poi-notes"></div>
+      <div class="poi-actions">
+        <button class="map-focus secondary">Auf Karte</button>
+        <a class="maps-link ghost-link" target="_blank" rel="noopener">Navigation</a>
+        <a class="source-link ghost-link" target="_blank" rel="noopener">Quelle</a>
+      </div>
+    </article>
+  </template>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+          integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+          crossorigin=""></script>
+  <script src="app.js"></script>
+</body>
+</html>
