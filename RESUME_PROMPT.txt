@@ -1,0 +1,35 @@
+Wir setzen das Projekt **Edinburgh Trip Navigator** fort.
+
+Lies zuerst die beigefügte `HANDOFF.md` und danach die aktuellen Repository-/Projektdateien vollständig.
+
+Bekannte Baseline:
+- App v0.1.5
+- Masterdaten v1.2
+- Stand 08.08.2026
+- 118 POIs
+- 34 Whimsical-Einträge
+- GitHub Pages / statische HTML-App
+- Leaflet + OpenStreetMap
+- Karte + Liste
+- Dark Mode
+- iOS-sichere eigene Modals
+- SOS
+- Hotel-Rückkehr
+- Lothian-Buslinks
+- Whimsical-Kategorie
+- Links pro POI
+
+Ziel: Finish für Edinburgh-Reise Februar bis Anfang April 2027.
+
+Bitte keinen Rewrite beginnen. Prüfe zuerst, ob die Dateien noch der Baseline entsprechen.
+Danach die Finish-Roadmap aus HANDOFF.md abarbeiten:
+1. 2027-Daten aktualisieren,
+2. POI-Links verifizieren,
+3. exakte Koordinaten,
+4. Öffnungszeiten maschinenlesbar,
+5. „Jetzt geöffnet“ / Küchenzeiten,
+6. PWA und Offline-Emergency,
+7. iOS-/Android-Abnahmetest.
+
+Zeitkritische Fakten immer aktuell recherchieren und offizielle Quellen bevorzugen.
+Keine privaten Buchungs-, Versicherungs-, Pass- oder Gesundheitsdaten in öffentliche Repo-Dateien schreiben.
