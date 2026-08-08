@@ -1,0 +1,19 @@
+# Private trip data
+config/private.json
+.env
+.env.*
+*.key
+*.pem
+
+# Booking / identity documents
+private/
+bookings/
+documents/
+passport*
+insurance*
+
+# OS/editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
