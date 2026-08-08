@@ -5,11 +5,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#111827">
   <title>Edinburgh Trip Navigator</title>
+  <script>
+    (() => {
+      const saved = localStorage.getItem("edinburgh-theme");
+      const preferred = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+      document.documentElement.dataset.theme = saved || preferred;
+    })();
+  </script>
   <link rel="preconnect" href="https://unpkg.com">
   <link rel="preconnect" href="https://tile.openstreetmap.org">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-        integrity="sha256-p4NxAoJBhIINfQ3ynHTB08MGV+oQkL2Zk1i0wD3MZzY=" crossorigin="">
-  <link rel="stylesheet" href="styles.css">
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+  <link rel="stylesheet" href="styles.css?v=0.1.2">
 </head>
 <body>
   <header class="topbar">
@@ -17,7 +24,10 @@
       <div class="eyebrow">Edinburgh 2027</div>
       <h1>Trip Navigator</h1>
     </div>
-    <button id="emergencyBtn" class="emergency-btn" aria-label="Notfall und Hilfe öffnen">SOS</button>
+    <div class="header-actions">
+      <button id="themeBtn" class="theme-btn" aria-label="Darstellung wechseln" title="Dark Mode umschalten">🌙</button>
+      <button id="emergencyBtn" class="emergency-btn" aria-label="Notfall und Hilfe öffnen">SOS</button>
+    </div>
   </header>
 
   <main>
@@ -69,6 +79,10 @@
 
     <section class="workspace">
       <div class="map-pane card">
+        <div class="map-toolbar">
+          <span id="mapLoadStatus">Karte wird geladen …</span>
+          <button id="reloadMapBtn" class="map-reload" type="button">↻ Karte neu laden</button>
+        </div>
         <div id="map"></div>
       </div>
 
@@ -137,6 +151,6 @@
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
           integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
           crossorigin=""></script>
-  <script src="app.js"></script>
+  <script src="app.js?v=0.1.2"></script>
 </body>
 </html>

@@ -16,12 +16,64 @@ let referencePoint = null;
 let markers = new Map();
 let referenceMarker = null;
 
-const map = L.map("map").setView([55.9533,-3.1883], 13);
-L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+const map = L.map("map", {
+  preferCanvas: true,
+  zoomControl: true
+}).setView([55.9533,-3.1883], 13);
+
+const baseTiles = L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
   maxZoom: 19,
-  attribution: '&copy; OpenStreetMap contributors'
+  attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors',
+  className: "base-map-tiles",
+  updateWhenIdle: false,
+  updateWhenZooming: false,
+  updateInterval: 150,
+  keepBuffer: 3,
+  referrerPolicy: "strict-origin-when-cross-origin"
 }).addTo(map);
+
 const layer = L.layerGroup().addTo(map);
+
+let tileErrorCount = 0;
+let mapRetryTimer = null;
+let autoRetryUsed = false;
+
+function setMapStatus(text){
+  const el = document.getElementById("mapLoadStatus");
+  if(el) el.textContent = text;
+}
+
+baseTiles.on("loading", () => setMapStatus("Kartenteile werden geladen …"));
+baseTiles.on("load", () => {
+  tileErrorCount = 0;
+  autoRetryUsed = false;
+  setMapStatus("Karte vollständig geladen");
+});
+baseTiles.on("tileerror", () => {
+  tileErrorCount += 1;
+  if(!autoRetryUsed){
+    setMapStatus(`Kartenteil fehlt (${tileErrorCount}) – ein Neuversuch …`);
+    autoRetryUsed = true;
+    if(!mapRetryTimer){
+      mapRetryTimer = setTimeout(() => {
+        mapRetryTimer = null;
+        map.invalidateSize({pan:false});
+        baseTiles.redraw();
+      }, 1800);
+    }
+  } else {
+    setMapStatus(`Kartenteile fehlen (${tileErrorCount}) – „Karte neu laden“ antippen`);
+  }
+});
+
+function refreshMap(){
+  tileErrorCount = 0;
+  autoRetryUsed = false;
+  setMapStatus("Karte wird neu aufgebaut …");
+  map.invalidateSize({pan:false});
+  baseTiles.redraw();
+  setTimeout(() => map.invalidateSize({pan:false}), 250);
+}
 
 function crowdLabel(value){
   return ({low:"🟢 ruhig",medium:"🟡 mittel",high:"🟠 belebt",very_high:"🔴 voll"})[value] || "–";
@@ -52,7 +104,9 @@ async function loadData(){
   buildCategoryButtons();
   buildEmergency();
   applyFilters();
-  document.getElementById("statusText").textContent = "Datenstand v1.1";
+  document.getElementById("statusText").textContent = "Datenstand v1.1 · App v0.1.2";
+  setTimeout(() => map.invalidateSize({pan:false}), 80);
+  setTimeout(() => map.invalidateSize({pan:false}), 500);
 }
 
 function buildCategoryButtons(){
@@ -146,7 +200,9 @@ function renderMap(){
   const bounds=[];
   filtered.forEach(p=>{
     if(typeof p.lat!=="number" || typeof p.lon!=="number") return;
-    const marker=L.marker([p.lat,p.lon]).addTo(layer)
+    const marker=L.circleMarker([p.lat,p.lon],{
+      radius:5, weight:2, opacity:.9, fillOpacity:.72
+    }).addTo(layer)
       .bindPopup(`<strong>${p.name}</strong>${categoryLabel(p.primary_category)}<br>${p.address}`);
     markers.set(p.id,marker);
     bounds.push([p.lat,p.lon]);
@@ -239,6 +295,45 @@ function buildEmergency(){
   (emergency.healthcare_guidance?.summary_de||[]).forEach(t=>{const li=document.createElement("li");li.textContent=t;ul.appendChild(li)});
   guidance.appendChild(ul);host.appendChild(guidance);
 }
+
+
+function applyTheme(theme){
+  const value = theme === "dark" ? "dark" : "light";
+  document.documentElement.dataset.theme = value;
+  localStorage.setItem("edinburgh-theme", value);
+  const btn = document.getElementById("themeBtn");
+  if(btn){
+    btn.textContent = value === "dark" ? "☀️" : "🌙";
+    btn.title = value === "dark" ? "Light Mode einschalten" : "Dark Mode einschalten";
+    btn.setAttribute("aria-label", btn.title);
+  }
+  const meta = document.querySelector('meta[name="theme-color"]');
+  if(meta) meta.setAttribute("content", value === "dark" ? "#080b10" : "#111827");
+}
+
+const initialTheme = document.documentElement.dataset.theme || "light";
+applyTheme(initialTheme);
+
+document.getElementById("themeBtn")?.addEventListener("click", () => {
+  applyTheme(document.documentElement.dataset.theme === "dark" ? "light" : "dark");
+});
+
+document.getElementById("reloadMapBtn")?.addEventListener("click", refreshMap);
+
+let resizeTimer = null;
+function scheduleMapResize(){
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(() => map.invalidateSize({pan:false}), 180);
+}
+window.addEventListener("resize", scheduleMapResize, {passive:true});
+window.addEventListener("orientationchange", () => {
+  setTimeout(() => map.invalidateSize({pan:false}), 200);
+  setTimeout(() => map.invalidateSize({pan:false}), 700);
+});
+window.addEventListener("pageshow", () => setTimeout(() => map.invalidateSize({pan:false}), 120));
+document.addEventListener("visibilitychange", () => {
+  if(document.visibilityState === "visible") setTimeout(() => map.invalidateSize({pan:false}), 120);
+});
 
 document.querySelectorAll(".filter-chip").forEach(b=>b.addEventListener("click",()=>{
   const f=b.dataset.filter;
