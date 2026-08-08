@@ -1,0 +1,20 @@
+{
+  "_warning": "Copy this file to private.json. Do NOT commit private.json.",
+  "traveller_names": [
+    "",
+    ""
+  ],
+  "emergency_contact_home": {
+    "name": "",
+    "phone": ""
+  },
+  "travel_insurance": {
+    "provider": "",
+    "phone": "",
+    "policy_number": ""
+  },
+  "dfds_booking_reference": "",
+  "hotel_booking_reference": "",
+  "ehic_expiry": "",
+  "medication_notes": ""
+}
