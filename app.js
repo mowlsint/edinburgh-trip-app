@@ -9,6 +9,42 @@ const CATEGORY_META = {
 
 const CATEGORY_ORDER = ["whimsical","pub","whisky_bar","restaurant","cafe","shop","museum","cemetery","church","castle","ruin","park","nature","viewpoint","tour","experience"];
 
+const CATEGORY_COLORS = {
+  whimsical: "#7E22CE",
+  pub: "#B45309",
+  whisky_bar: "#6D28D9",
+  restaurant: "#B91C1C",
+  cafe: "#9A3412",
+  shop: "#BE185D",
+  museum: "#1D4ED8",
+  cemetery: "#475569",
+  church: "#0F766E",
+  castle: "#92400E",
+  ruin: "#6B7280",
+  park: "#15803D",
+  nature: "#166534",
+  viewpoint: "#0369A1",
+  tour: "#C2410C",
+  experience: "#A21CAF"
+};
+
+function categoryColor(cat){
+  return CATEGORY_COLORS[cat] || "#334155";
+}
+
+function markerCategory(p){
+  if(activeCategories.size===1 && activeCategories.has("whimsical") && p.categories?.includes("whimsical")){
+    return "whimsical";
+  }
+  return p.primary_category;
+}
+
+function poiMarkerRadius(){
+  if(window.matchMedia?.("(max-width: 640px)").matches) return 11;
+  if(window.matchMedia?.("(pointer: coarse)").matches) return 10;
+  return 8;
+}
+
 let master = null;
 let emergency = null;
 let transit = null;
@@ -110,7 +146,7 @@ async function loadData(){
   buildEmergency();
   buildTransit();
   applyFilters();
-  document.getElementById("statusText").textContent = "Datenstand v1.2 · App v0.1.5";
+  document.getElementById("statusText").textContent = "Datenstand v1.2 · App v0.1.6";
   setTimeout(() => map.invalidateSize({pan:false}), 80);
   setTimeout(() => map.invalidateSize({pan:false}), 500);
 }
@@ -134,6 +170,7 @@ function buildCategoryButtons(){
     const b=document.createElement("button");
     b.className="chip category-chip";
     b.dataset.category=cat;
+    b.style.setProperty("--category-color", categoryColor(cat));
     b.textContent=`${categoryLabel(cat)} · ${counts[cat]}`;
     b.onclick=()=>{
       activeCategories.has(cat)?activeCategories.delete(cat):activeCategories.add(cat);
@@ -185,7 +222,13 @@ function renderList(){
   document.getElementById("resultCount").textContent=filtered.length;
   filtered.forEach(p=>{
     const node=template.content.cloneNode(true);
-    node.querySelector(".poi-category").textContent=categoryLabel(p.primary_category);
+    const card=node.querySelector(".poi-card");
+    card.id=`poi-${p.id}`;
+    card.dataset.poiId=p.id;
+    card.style.setProperty("--poi-category-color", categoryColor(p.primary_category));
+    const categoryEl=node.querySelector(".poi-category");
+    categoryEl.textContent=categoryLabel(p.primary_category);
+    categoryEl.style.color=categoryColor(p.primary_category);
     node.querySelector(".poi-name").textContent=p.name;
     node.querySelector(".poi-address").textContent=p.address;
     node.querySelector(".distance-badge").textContent=p._distance==null?"":`${p._distance.toFixed(1)} km`;
@@ -214,16 +257,62 @@ function renderList(){
   });
 }
 
+
+function scrollToPoiCard(poiId){
+  const card=document.getElementById(`poi-${poiId}`);
+  if(!card) return;
+
+  map.closePopup();
+  card.scrollIntoView({
+    behavior:"smooth",
+    block:"center",
+    inline:"nearest"
+  });
+
+  card.classList.remove("poi-highlight");
+  void card.offsetWidth;
+  card.classList.add("poi-highlight");
+  setTimeout(()=>card.classList.remove("poi-highlight"), 2200);
+}
+
 function renderMap(){
   layer.clearLayers();
   markers.clear();
   const bounds=[];
   filtered.forEach(p=>{
     if(typeof p.lat!=="number" || typeof p.lon!=="number") return;
+    const markerCat=markerCategory(p);
+    const color=categoryColor(markerCat);
     const marker=L.circleMarker([p.lat,p.lon],{
-      radius:5, weight:2, opacity:.9, fillOpacity:.72
-    }).addTo(layer)
-      .bindPopup(`<strong>${p.name}</strong>${categoryLabel(p.primary_category)}<br>${p.address}`);
+      radius:poiMarkerRadius(),
+      weight:3,
+      color:"#ffffff",
+      opacity:.96,
+      fillColor:color,
+      fillOpacity:.9,
+      bubblingMouseEvents:false
+    }).addTo(layer);
+
+    const popupButton=document.createElement("button");
+    popupButton.type="button";
+    popupButton.className="map-popup-jump";
+    popupButton.style.setProperty("--popup-category-color", color);
+    popupButton.innerHTML=`
+      <span class="map-popup-dot" aria-hidden="true"></span>
+      <span class="map-popup-copy">
+        <strong>${p.name}</strong>
+        <span>${categoryLabel(p.primary_category)}</span>
+        <small>In Liste anzeigen ↓</small>
+      </span>
+    `;
+    popupButton.addEventListener("click",()=>scrollToPoiCard(p.id));
+
+    marker.bindPopup(popupButton,{
+      closeButton:true,
+      className:"poi-map-popup",
+      maxWidth:290,
+      autoPan:true
+    });
     markers.set(p.id,marker);
     bounds.push([p.lat,p.lon]);
   });
@@ -240,7 +329,7 @@ function focusPoi(p){
 function setReference(lat,lon,label){
   referencePoint={lat,lon,label};
   if(referenceMarker) map.removeLayer(referenceMarker);
-  referenceMarker=L.circleMarker([lat,lon],{radius:8,weight:3,fillOpacity:.8}).addTo(map)
+  referenceMarker=L.circleMarker([lat,lon],{radius:12,weight:4,color:"#ffffff",fillColor:"#E11D48",fillOpacity:.95}).addTo(map)
     .bindPopup(`<strong>Referenzpunkt</strong>${label}`).openPopup();
   document.getElementById("referenceInfo").textContent=`Referenzpunkt: ${label} · ${lat.toFixed(5)}, ${lon.toFixed(5)}`;
   document.getElementById("sortSelect").value="distance";
@@ -465,6 +554,12 @@ function scheduleMapResize(){
   resizeTimer = setTimeout(() => map.invalidateSize({pan:false}), 180);
 }
 window.addEventListener("resize", scheduleMapResize, {passive:true});
+window.addEventListener("resize", ()=>{
+  clearTimeout(window.__poiMarkerResizeTimer);
+  window.__poiMarkerResizeTimer=setTimeout(()=>{
+    markers.forEach(marker=>marker.setRadius?.(poiMarkerRadius()));
+  },240);
+},{passive:true});
 window.addEventListener("orientationchange", () => {
   setTimeout(() => map.invalidateSize({pan:false}), 200);
   setTimeout(() => map.invalidateSize({pan:false}), 700);
