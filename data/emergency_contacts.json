@@ -1,0 +1,285 @@
+{
+  "meta": {
+    "title": "Edinburgh Emergency & Help",
+    "verified_on": "2026-08-08",
+    "recheck_before_trip": true,
+    "country": "United Kingdom",
+    "region": "Scotland",
+    "city": "Edinburgh",
+    "important_note": "For life-threatening emergencies call 999 or 112. For urgent medical problems that are not life- or limb-threatening call NHS 24 on 111.",
+    "privacy_note": "Do not commit personal booking references, passport data, insurance policy numbers or private medical information to a public repository."
+  },
+  "quick_actions": [
+    {
+      "id": "emergency_999",
+      "label": "Notruf 999",
+      "category": "emergency",
+      "priority": 1,
+      "phone": "999",
+      "alternate_phone": "112",
+      "action": "call",
+      "covers": [
+        "ambulance",
+        "police",
+        "fire",
+        "coastguard",
+        "mountain_rescue"
+      ],
+      "when_to_use": "Lebensgefahr, schwere Verletzung, starke Blutung, Atemnot, laufende schwere Straftat oder sonstiger akuter Notfall.",
+      "source_url": "https://www.scotland.police.uk/contact-us/",
+      "verified_on": "2026-08-08"
+    },
+    {
+      "id": "nhs_111",
+      "label": "NHS 24 – 111",
+      "category": "medical",
+      "priority": 2,
+      "phone": "111",
+      "action": "call",
+      "availability": "24/7",
+      "when_to_use": "Dringende medizinische Hilfe, wenn es nicht lebensbedrohlich ist; auch außerhalb der Öffnungszeiten von GP, Apotheke oder Zahnarzt.",
+      "notes": "NHS 24 kann triagieren und bei Bedarf an A&E, Minor Injuries, GP-Out-of-Hours, Zahndienst oder andere Versorgung weiterleiten.",
+      "source_url": "https://www.nhs24.scot/111/",
+      "verified_on": "2026-08-08"
+    },
+    {
+      "id": "police_101",
+      "label": "Police Scotland – 101",
+      "category": "police",
+      "priority": 3,
+      "phone": "101",
+      "alternate_phone": "+44 300 426 0101",
+      "action": "call",
+      "availability": "24/7",
+      "when_to_use": "Nicht-akute Polizeifälle, z. B. Diebstahl oder Sachbeschädigung, wenn keine unmittelbare Gefahr besteht.",
+      "source_url": "https://www.scotland.police.uk/contact-us/non-emergencies/",
+      "verified_on": "2026-08-08"
+    }
+  ],
+  "accommodation": [
+    {
+      "id": "alpha_guest_house",
+      "name": "Alpha Guest House",
+      "category": "accommodation",
+      "phone": "+44 131 258 0810",
+      "email": null,
+      "address": "19 Old Dalkeith Road, Edinburgh EH16 4TE, United Kingdom",
+      "action_buttons": [
+        "call",
+        "map"
+      ],
+      "notes": "E-Mail-Adresse nach Buchung aus der Bestätigung in die private lokale Konfiguration übernehmen.",
+      "source_url": "https://alphaguesthouse.co.uk/",
+      "verified_on": "2026-08-08"
+    }
+  ],
+  "ferry": [
+    {
+      "id": "dfds_customer_service_de",
+      "name": "DFDS Kundenservice Deutschland",
+      "category": "ferry",
+      "phone": "+49 40 38903 71",
+      "email": "service.de@dfds.com",
+      "hours_snapshot": "Mo–Fr 09:00–17:00",
+      "action_buttons": [
+        "call",
+        "email"
+      ],
+      "source_url": "https://www.dfds.com/de-de/passagierfaehren/kundenservice/kontakt",
+      "verified_on": "2026-08-08"
+    },
+    {
+      "id": "dfds_ijmuiden_terminal",
+      "name": "DFDS Amsterdam/IJmuiden Terminal",
+      "category": "ferry_terminal",
+      "phone": "+31 10 20 84 992",
+      "email": null,
+      "address": "Sluisplein 33, 1975 AG IJmuiden, Netherlands",
+      "action_buttons": [
+        "call",
+        "map"
+      ],
+      "source_url": "https://www.dfds.com/en/passenger-ferries/passenger-information/terminals/amsterdam",
+      "verified_on": "2026-08-08"
+    },
+    {
+      "id": "dfds_newcastle_terminal",
+      "name": "DFDS Newcastle Terminal",
+      "category": "ferry_terminal",
+      "phone": "+44 191 293 6268",
+      "email": "ncl-ijmbookings@dfds.com",
+      "address": "International Passenger Terminal, Albert Edward Dock, Royal Quays, North Shields NE29 6EE, United Kingdom",
+      "action_buttons": [
+        "call",
+        "email",
+        "map"
+      ],
+      "source_url": "https://www.dfds.com/en/passenger-ferries/passenger-information/terminals/newcastle",
+      "verified_on": "2026-08-08"
+    },
+    {
+      "id": "dfds_lost_property",
+      "name": "DFDS Lost Property – Newcastle/Amsterdam",
+      "category": "lost_property",
+      "email": "lostuk@dfds.com",
+      "action_buttons": [
+        "email"
+      ],
+      "notes": "Bei Verlust an Bord Buchungsnummer, Reisedatum, Schiff und Beschreibung des Gegenstands angeben.",
+      "source_url": "https://www.dfds.com/de-de/passagierfaehren/kundenservice/kontakt",
+      "verified_on": "2026-08-08"
+    }
+  ],
+  "medical_locations": [
+    {
+      "id": "royal_infirmary_edinburgh_ae",
+      "name": "Royal Infirmary of Edinburgh – A&E",
+      "category": "hospital_ae",
+      "phone": "+44 131 536 1000",
+      "address": "51 Little France Crescent, Old Dalkeith Road, Edinburgh EH16 4SA, United Kingdom",
+      "hours_snapshot": "24/7",
+      "adult_only_note": "A&E listing states patients aged 16+.",
+      "action_buttons": [
+        "call",
+        "map"
+      ],
+      "when_to_use": "Schwere oder potenziell lebensbedrohliche Beschwerden; bei unmittelbarer Gefahr 999.",
+      "source_url": "https://www.nhs24.scot/find-a-service/aes-and-minor-injuries-units/9359%201edc1116/",
+      "verified_on": "2026-08-08"
+    },
+    {
+      "id": "western_general_miu",
+      "name": "Western General Hospital – Minor Injuries Unit",
+      "category": "minor_injuries",
+      "phone": "111",
+      "address": "Crewe Road South, Edinburgh EH4 2XU, United Kingdom",
+      "hours_snapshot": "08:00–20:30 daily (current NHS listing)",
+      "action_buttons": [
+        "call",
+        "map"
+      ],
+      "when_to_use": "Schnittwunden, kleinere Verbrennungen, Verstauchungen/Zerrungen, vermutete einfache Brüche.",
+      "notes": "NHS weist darauf hin, vor Nutzung der Minor Injuries Unit 111 anzurufen.",
+      "source_url": "https://www.nhsinform.scot/scotlands-service-directory/aes-and-minor-injuries-units/9363%201edc1116",
+      "verified_on": "2026-08-08"
+    },
+    {
+      "id": "dalkeith_road_medical_practice",
+      "name": "Dalkeith Road Medical Practice",
+      "category": "gp",
+      "phone": "+44 131 667 1289",
+      "address": "Salisbury Court, 102 St Leonards Street, Edinburgh EH8 9RD, United Kingdom",
+      "hours_snapshot": "Mo–Fr 08:00–18:00",
+      "action_buttons": [
+        "call",
+        "map"
+      ],
+      "notes": "Nahe Southside/Alpha-Guest-House-Bereich. Als Tourist vorher anrufen; Behandlung als Temporary Resident ist möglich, aber nicht garantiert.",
+      "source_url": "https://www.nhs24.scot/find-a-service/gp-practices/2251%201edc1116/",
+      "verified_on": "2026-08-08"
+    },
+    {
+      "id": "southside_pharmacy",
+      "name": "Southside Pharmacy",
+      "category": "pharmacy",
+      "phone": "+44 131 667 4032",
+      "address": "79 Nicolson Street, Edinburgh EH8 9BZ, United Kingdom",
+      "hours_snapshot": "Mo–Fr 09:00–19:00; Sa 09:00–18:00; So geschlossen",
+      "action_buttons": [
+        "call",
+        "map"
+      ],
+      "notes": "Apotheken sind eine gute erste Anlaufstelle bei kleineren Beschwerden und für Fragen zu Medikamenten.",
+      "source_url": "https://www.nhsinform.scot/scotlands-service-directory/pharmacies/6701%201edc1116/",
+      "verified_on": "2026-08-08"
+    },
+    {
+      "id": "chalmers_dental",
+      "name": "Chalmers Dental Centre – Emergency Dental",
+      "category": "dental",
+      "phone": "+44 131 536 4800",
+      "address": "3 Chalmers Street, Edinburgh EH3 9EW, United Kingdom",
+      "hours_snapshot": "Triage Mo–Fr 09:00–18:00; treatment Mo–Fr 09:00–16:00",
+      "action_buttons": [
+        "call",
+        "map"
+      ],
+      "notes": "Kein Walk-in; für dringenden Termin vorher anrufen. Außerhalb der Zeiten: NHS 24 auf 111.",
+      "source_url": "https://www.nhsinform.scot/care-support-and-rights/dental-emergencies/",
+      "verified_on": "2026-08-08"
+    }
+  ],
+  "transport_and_documents": [
+    {
+      "id": "british_transport_police",
+      "name": "British Transport Police",
+      "category": "rail_police",
+      "phone": "0800 40 50 40",
+      "sms": "61016",
+      "action_buttons": [
+        "call",
+        "sms"
+      ],
+      "when_to_use": "Nicht-akute Sicherheits- oder Kriminalitätsprobleme im Bahnverkehr. Im Notfall 999.",
+      "source_url": "https://www.btp.police.uk/police-forces/british-transport-police/areas/campaigns/61016-text-service/",
+      "verified_on": "2026-08-08"
+    },
+    {
+      "id": "german_consulate_edinburgh",
+      "name": "Generalkonsulat der Bundesrepublik Deutschland Edinburgh",
+      "category": "consulate",
+      "phone": "+44 131 337 2323",
+      "emergency_phone_out_of_hours": "+44 7956 626107",
+      "address": "16 Eglinton Crescent, Edinburgh EH12 5DG, United Kingdom",
+      "hours_snapshot": "Mo–Fr nur mit vorheriger Terminbuchung",
+      "action_buttons": [
+        "call",
+        "map"
+      ],
+      "notes": "Bereitschaftsnummer nur für akute konsularische Notfälle außerhalb der Öffnungszeiten.",
+      "source_url": "https://uk.diplo.de/uk-de/vertretungen-honorarkonsuln/2generalkonsulat",
+      "verified_on": "2026-08-08"
+    },
+    {
+      "id": "card_blocking_germany",
+      "name": "Sperr-Notruf Deutschland",
+      "category": "cards",
+      "phone": "+49 116 116",
+      "alternate_phone": "+49 30 4050 4050",
+      "action_buttons": [
+        "call"
+      ],
+      "notes": "Für unterstützte Karten/Medien; aus dem Ausland können Gebühren anfallen.",
+      "source_url": "https://uk.diplo.de/uk-de/02/a-z-themen/nuetzliche-telefonnummern-2652766",
+      "verified_on": "2026-08-08"
+    }
+  ],
+  "healthcare_guidance": {
+    "summary_de": [
+      "Lebensbedrohlich: 999 oder 112.",
+      "Dringend, aber nicht lebensbedrohlich: NHS 24 unter 111.",
+      "Tagsüber kann eine GP-Praxis Touristen gegebenenfalls als Temporary Resident behandeln; vorher anrufen.",
+      "Bei kleineren Beschwerden zuerst eine Apotheke in Betracht ziehen.",
+      "Für Minor Injuries empfiehlt NHS, zuerst 111 anzurufen.",
+      "Als Besucher aus dem EWR sollte eine gültige EHIC mitgeführt werden. NHS Scotland weist außerdem ausdrücklich auf Reiseversicherung mit medizinischer Deckung hin.",
+      "Eine EHIC deckt keinen medizinisch begleiteten Rücktransport ins Heimatland ab."
+    ],
+    "sources": [
+      "https://www.nhs24.scot/111/",
+      "https://www.nhsinform.scot/care-support-and-rights/registering-with-a-gp-practice/",
+      "https://www.nhsinform.scot/care-support-and-rights/health-rights/access/healthcare-for-overseas-visitors/"
+    ],
+    "verified_on": "2026-08-08"
+  },
+  "private_fields_recommended": [
+    "traveller_names",
+    "emergency_contact_home",
+    "travel_insurance_provider",
+    "travel_insurance_phone",
+    "travel_insurance_policy_number",
+    "ehic_expiry",
+    "dfds_booking_reference",
+    "hotel_booking_reference",
+    "medication_notes"
+  ]
+}
