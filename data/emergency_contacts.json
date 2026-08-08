@@ -281,5 +281,33 @@
     "dfds_booking_reference",
     "hotel_booking_reference",
     "medication_notes"
+  ],
+  "taxi": [
+    {
+      "id": "central_taxis_edinburgh",
+      "name": "Central Taxis Edinburgh",
+      "category": "taxi",
+      "phone": "+44 131 229 2468",
+      "availability": "24/7 booking centre",
+      "action_buttons": [
+        "call"
+      ],
+      "notes": "Licensed Edinburgh black-cab operator. Booking line.",
+      "source_url": "https://www.taxis-edinburgh.co.uk/bookings/",
+      "verified_on": "2026-08-08"
+    },
+    {
+      "id": "central_cars_edinburgh",
+      "name": "Central Cars",
+      "category": "private_hire",
+      "phone": "+44 131 442 4444",
+      "availability": "Check at time of use",
+      "action_buttons": [
+        "call"
+      ],
+      "notes": "Saloon-car option listed by Central Taxis / City of Edinburgh Council Taxicard information.",
+      "source_url": "https://www.taxis-edinburgh.co.uk/contact/",
+      "verified_on": "2026-08-08"
+    }
   ]
 }

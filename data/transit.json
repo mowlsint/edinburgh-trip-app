@@ -1,0 +1,51 @@
+{
+  "meta": {
+    "title": "Edinburgh Bus & Transit",
+    "verified_on": "2026-08-08",
+    "recheck_before_trip": true,
+    "note_de": "Live-Abfahrten werden über Lothian Buses geöffnet. Die App speichert nur stabile Links und einen 2026-Snapshot relevanter Linien."
+  },
+  "official": {
+    "live_times_url": "https://www.lothianbuses.com/live-times/",
+    "journey_planner_url": "https://www.lothianbuses.com/live-travel-info/journey-planner/",
+    "service_updates_url": "https://www.lothianbuses.com/service-updates/",
+    "timetables_url": "https://www.lothianbuses.com/timetables/",
+    "nightbus_url": "https://www.lothianbuses.com/our-services/nightbus/"
+  },
+  "hotel": {
+    "name": "Alpha Guest House",
+    "address": "19 Old Dalkeith Road, Edinburgh EH16 4TE, United Kingdom"
+  },
+  "relevant_services": [
+    {
+      "service": "33",
+      "route_snapshot": "Westburn ↔ Millerhill",
+      "why_relevant": "Old Dalkeith Road corridor; useful city-centre connection candidate.",
+      "timetable_url": "https://www.lothianbuses.com/timetable/?service_name=33"
+    },
+    {
+      "service": "24",
+      "route_snapshot": "West Granton ↔ Royal Infirmary",
+      "why_relevant": "Old Dalkeith Road / Royal Infirmary corridor.",
+      "timetable_url": "https://www.lothianbuses.com/timetable/?service_name=24"
+    },
+    {
+      "service": "38",
+      "route_snapshot": "West Granton ↔ Royal Infirmary",
+      "why_relevant": "Old Dalkeith Road / Royal Infirmary corridor.",
+      "timetable_url": "https://www.lothianbuses.com/timetable/?service_name=38"
+    },
+    {
+      "service": "49",
+      "route_snapshot": "Royal Infirmary ↔ Fort Kinnaird",
+      "why_relevant": "Old Dalkeith Road / Royal Infirmary corridor.",
+      "timetable_url": "https://www.lothianbuses.com/timetable/?service_name=49"
+    },
+    {
+      "service": "N31",
+      "route_snapshot": "City Centre ↔ Bonnyrigg",
+      "why_relevant": "Aktuelle NightBus-Linie in Richtung Süden; exakten Hotel-Stopp im Live-Planer prüfen.",
+      "timetable_url": "https://www.lothianbuses.com/timetable/?service_name=N31"
+    }
+  ]
+}
