@@ -51,3 +51,19 @@ button,.ghost-link{border-radius:12px;border:1px solid transparent;padding:10px 
 @media(max-width:640px){
   main{padding:8px}.search-row{grid-template-columns:1fr 1fr}.search-box{grid-column:1/-1}.sort-row{align-items:stretch}.poi-list{grid-template-columns:1fr}.quick-actions{grid-template-columns:1fr}.map-pane{padding:5px}#map{height:42vh;min-height:300px}.floating-sos{bottom:14px;right:14px}
 }
+
+
+/* v0.1.1 mobile/map safeguards */
+html, body {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+#map, .leaflet-container {
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+}
+img.leaflet-tile, .leaflet-marker-icon, .leaflet-marker-shadow {
+  max-width: none !important;
+}
