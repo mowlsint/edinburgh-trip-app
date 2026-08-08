@@ -16,7 +16,7 @@
   <link rel="preconnect" href="https://tile.openstreetmap.org">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
         integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
-  <link rel="stylesheet" href="styles.css?v=0.1.2">
+  <link rel="stylesheet" href="styles.css?v=0.1.3">
 </head>
 <body>
   <header class="topbar">
@@ -25,6 +25,7 @@
       <h1>Trip Navigator</h1>
     </div>
     <div class="header-actions">
+      <button id="busBtn" class="bus-btn" aria-label="Bus und Fahrpläne öffnen" title="Bus & Fahrpläne">🚌</button>
       <button id="themeBtn" class="theme-btn" aria-label="Darstellung wechseln" title="Dark Mode umschalten">🌙</button>
       <button id="emergencyBtn" class="emergency-btn" aria-label="Notfall und Hilfe öffnen">SOS</button>
     </div>
@@ -92,7 +93,65 @@
     </section>
   </main>
 
-  <button id="floatingEmergencyBtn" class="floating-sos" aria-label="Notfall und Hilfe öffnen">SOS</button>
+  <div class="floating-actions">
+    <button id="floatingHotelBtn" class="floating-hotel" aria-label="Zum Hotel zurück">🏠 Hotel</button>
+    <button id="floatingEmergencyBtn" class="floating-sos" aria-label="Notfall und Hilfe öffnen">SOS</button>
+  </div>
+
+
+  <dialog id="busDialog" class="emergency-dialog mobility-dialog">
+    <div class="dialog-head">
+      <div>
+        <div class="eyebrow">Mobilität</div>
+        <h2>Bus & Fahrpläne</h2>
+      </div>
+      <button id="closeBusBtn" class="close-btn" aria-label="Schließen">×</button>
+    </div>
+
+    <div class="mobility-intro">
+      Für Live-Abfahrten nutzt die App direkt Lothian Buses. So bleiben die Zeiten aktuell,
+      auch wenn sich Fahrpläne oder Umleitungen ändern.
+    </div>
+
+    <div class="mobility-actions">
+      <a id="liveBusLink" class="mobility-action live" target="_blank" rel="noopener">🟢 Live-Abfahrten</a>
+      <a id="journeyPlannerLink" class="mobility-action" target="_blank" rel="noopener">🧭 Journey Planner</a>
+      <a id="serviceUpdatesLink" class="mobility-action" target="_blank" rel="noopener">⚠️ Störungen</a>
+    </div>
+
+    <div class="hotel-transit-card">
+      <strong>🏠 Zurück zum Alpha Guest House</strong>
+      <span>19 Old Dalkeith Road, EH16 4TE</span>
+      <button id="busToHotelBtn" class="primary">🚌 Route ab meinem Standort</button>
+    </div>
+
+    <section class="emergency-section">
+      <h3>Relevante Linien · Snapshot 2026</h3>
+      <div id="busServiceList"></div>
+      <p class="small-note">Für die Reise 2027 werden die Linien kurz vorher erneut geprüft.</p>
+    </section>
+  </dialog>
+
+  <dialog id="hotelDialog" class="emergency-dialog hotel-dialog">
+    <div class="dialog-head hotel-head">
+      <div>
+        <div class="eyebrow">Schnell zurück</div>
+        <h2>🏠 Alpha Guest House</h2>
+      </div>
+      <button id="closeHotelBtn" class="close-btn" aria-label="Schließen">×</button>
+    </div>
+    <div class="hotel-address">
+      19 Old Dalkeith Road<br>
+      Edinburgh EH16 4TE
+    </div>
+    <div id="hotelLocationStatus" class="reference-info">Aktueller Standort wird erst beim Start der Route abgefragt.</div>
+    <div class="hotel-route-grid">
+      <button class="hotel-route-btn transit" data-mode="transit">🚌<strong>Bus / ÖPNV</strong><span>Route in Maps öffnen</span></button>
+      <button class="hotel-route-btn walk" data-mode="walking">🚶<strong>Zu Fuß</strong><span>Fußweg öffnen</span></button>
+      <a class="hotel-route-btn taxi" href="tel:+441312292468">🚕<strong>Taxi</strong><span>Central Taxis anrufen</span></a>
+      <button id="hotelMapBtn" class="hotel-route-btn map-only">📍<strong>Hotelkarte</strong><span>Ziel anzeigen</span></button>
+    </div>
+  </dialog>
 
   <dialog id="emergencyDialog" class="emergency-dialog">
     <div class="dialog-head">
@@ -151,6 +210,6 @@
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
           integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
           crossorigin=""></script>
-  <script src="app.js?v=0.1.2"></script>
+  <script src="app.js?v=0.1.3"></script>
 </body>
 </html>

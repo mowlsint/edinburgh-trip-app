@@ -8,6 +8,7 @@ const CATEGORY_META = {
 
 let master = null;
 let emergency = null;
+let transit = null;
 let pois = [];
 let filtered = [];
 let activeCategories = new Set();
@@ -96,15 +97,17 @@ function categoryLabel(cat){
 function safe(v,fallback="–"){ return (v===null || v===undefined || v==="") ? fallback : v; }
 
 async function loadData(){
-  const [m,e] = await Promise.all([
+  const [m,e,t] = await Promise.all([
     fetch("data/edinburgh_master_v1_1.json").then(r=>r.json()),
-    fetch("data/emergency_contacts.json").then(r=>r.json())
+    fetch("data/emergency_contacts.json?v=0.1.3").then(r=>r.json()),
+    fetch("data/transit.json?v=0.1.3").then(r=>r.json())
   ]);
-  master=m; emergency=e; pois=m.pois || [];
+  master=m; emergency=e; transit=t; pois=m.pois || [];
   buildCategoryButtons();
   buildEmergency();
+  buildTransit();
   applyFilters();
-  document.getElementById("statusText").textContent = "Datenstand v1.1 · App v0.1.2";
+  document.getElementById("statusText").textContent = "Datenstand v1.1 · App v0.1.3";
   setTimeout(() => map.invalidateSize({pan:false}), 80);
   setTimeout(() => map.invalidateSize({pan:false}), 500);
 }
@@ -262,11 +265,88 @@ function useGeolocation(){
   },{enableHighAccuracy:true,timeout:10000});
 }
 
+
+const HOTEL = {
+  name: "Alpha Guest House",
+  address: "19 Old Dalkeith Road, Edinburgh EH16 4TE, United Kingdom"
+};
+
+function googleDirectionsUrl(mode, origin=null){
+  const params = new URLSearchParams({
+    api: "1",
+    destination: HOTEL.address,
+    travelmode: mode,
+    dir_action: "navigate"
+  });
+  if(origin) params.set("origin", `${origin.lat},${origin.lon}`);
+  return `https://www.google.com/maps/dir/?${params.toString()}`;
+}
+
+function hotelMapUrl(){
+  return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(HOTEL.address)}`;
+}
+
+function routeToHotel(mode="transit"){
+  const status = document.getElementById("hotelLocationStatus");
+  if(status) status.textContent = "Standort wird ermittelt …";
+
+  const openRoute = (origin=null) => {
+    if(status){
+      status.textContent = origin
+        ? `Start: ${origin.lat.toFixed(5)}, ${origin.lon.toFixed(5)}`
+        : "Standort nicht verfügbar – Maps verwendet den Geräte-Standort, falls möglich.";
+    }
+    window.location.href = googleDirectionsUrl(mode, origin);
+  };
+
+  if(!navigator.geolocation){
+    openRoute(null);
+    return;
+  }
+  navigator.geolocation.getCurrentPosition(
+    pos => openRoute({lat:pos.coords.latitude, lon:pos.coords.longitude}),
+    () => openRoute(null),
+    {enableHighAccuracy:true, timeout:8000, maximumAge:60000}
+  );
+}
+
+function buildTransit(){
+  if(!transit) return;
+  document.getElementById("liveBusLink").href = transit.official.live_times_url;
+  document.getElementById("journeyPlannerLink").href = transit.official.journey_planner_url;
+  document.getElementById("serviceUpdatesLink").href = transit.official.service_updates_url;
+
+  const host = document.getElementById("busServiceList");
+  host.innerHTML = "";
+  (transit.relevant_services || []).forEach(s => {
+    const card = document.createElement("div");
+    card.className = "bus-service-card";
+
+    const num = document.createElement("div");
+    num.className = "bus-number";
+    num.textContent = s.service;
+
+    const text = document.createElement("div");
+    text.className = "bus-service-text";
+    text.innerHTML = `<strong>${s.route_snapshot}</strong><span>${s.why_relevant}</span>`;
+
+    const link = document.createElement("a");
+    link.href = s.timetable_url;
+    link.target = "_blank";
+    link.rel = "noopener";
+    link.textContent = "Fahrplan";
+
+    card.append(num, text, link);
+    host.appendChild(card);
+  });
+}
+
 function buildEmergency(){
   const host=document.getElementById("emergencySections");
   const sections=[
     ["Unterkunft", emergency.accommodation],
     ["Fähre & Terminal", emergency.ferry],
+    ["🚕 Taxi", emergency.taxi],
     ["Medizin", emergency.medical_locations],
     ["Transport, Dokumente & weitere Hilfe", emergency.transport_and_documents]
   ];
@@ -349,6 +429,21 @@ document.getElementById("clearBtn").addEventListener("click",()=>{
   document.querySelectorAll(".chip.active").forEach(x=>x.classList.remove("active"));
   applyFilters();
 });
+const busDialog = document.getElementById("busDialog");
+document.getElementById("busBtn").addEventListener("click",()=>busDialog.showModal());
+document.getElementById("closeBusBtn").addEventListener("click",()=>busDialog.close());
+document.getElementById("busToHotelBtn").addEventListener("click",()=>routeToHotel("transit"));
+
+const hotelDialog = document.getElementById("hotelDialog");
+document.getElementById("floatingHotelBtn").addEventListener("click",()=>hotelDialog.showModal());
+document.getElementById("closeHotelBtn").addEventListener("click",()=>hotelDialog.close());
+document.querySelectorAll(".hotel-route-btn[data-mode]").forEach(btn=>{
+  btn.addEventListener("click",()=>routeToHotel(btn.dataset.mode));
+});
+document.getElementById("hotelMapBtn").addEventListener("click",()=>{
+  window.location.href = hotelMapUrl();
+});
+
 const dialog=document.getElementById("emergencyDialog");
 ["emergencyBtn","floatingEmergencyBtn"].forEach(id=>document.getElementById(id).addEventListener("click",()=>dialog.showModal()));
 document.getElementById("closeEmergencyBtn").addEventListener("click",()=>dialog.close());

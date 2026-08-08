@@ -122,3 +122,70 @@ html[data-theme="dark"] .leaflet-control-attribution a{color:#8cc8ff}
   .map-toolbar{font-size:.7rem}
   #map{height:44vh;min-height:310px}
 }
+
+
+/* v0.1.3 mobility */
+.bus-btn{
+  width:42px;height:42px;padding:0;border-radius:999px;border:1px solid rgba(255,255,255,.18);
+  background:rgba(255,255,255,.08);color:white;font-size:1.05rem;
+}
+.floating-actions{
+  position:fixed;right:14px;bottom:14px;z-index:1500;display:flex;flex-direction:column;align-items:flex-end;gap:9px;
+}
+.floating-actions .floating-sos{
+  position:static;right:auto;bottom:auto;width:58px;height:58px;
+}
+.floating-hotel{
+  border:0;border-radius:999px;background:#c2410c;color:white;font-weight:850;
+  padding:12px 15px;box-shadow:0 6px 20px rgba(194,65,12,.34);
+}
+.mobility-intro{
+  padding:14px 18px;color:var(--muted);font-size:.86rem;line-height:1.45;
+}
+.mobility-actions{
+  padding:0 14px 14px;display:grid;grid-template-columns:repeat(3,1fr);gap:8px;
+}
+.mobility-action{
+  min-height:54px;border-radius:13px;background:var(--panel-2);border:1px solid var(--line);
+  color:var(--ink);text-decoration:none;display:flex;align-items:center;justify-content:center;
+  text-align:center;padding:10px;font-weight:750;
+}
+.mobility-action.live{background:#e9f7ef;color:#176b3a;border-color:#b7e1c7}
+html[data-theme="dark"] .mobility-action.live{background:#153725;color:#9fe0b5;border-color:#275f3f}
+.hotel-transit-card{
+  margin:0 14px 14px;padding:13px;border-radius:14px;background:var(--accent-2);
+  display:grid;grid-template-columns:1fr auto;gap:5px 10px;align-items:center;
+}
+.hotel-transit-card strong{grid-column:1}.hotel-transit-card span{grid-column:1;color:var(--muted);font-size:.8rem}
+.hotel-transit-card button{grid-column:2;grid-row:1/3}
+.bus-service-card{
+  border:1px solid var(--line);border-radius:12px;padding:10px;margin-bottom:7px;
+  display:grid;grid-template-columns:auto 1fr auto;gap:8px;align-items:center;
+}
+.bus-number{
+  min-width:44px;height:44px;border-radius:12px;background:#1d4ed8;color:white;font-weight:900;
+  display:flex;align-items:center;justify-content:center;font-size:1rem;
+}
+.bus-service-text strong{display:block}.bus-service-text span{display:block;font-size:.76rem;color:var(--muted);line-height:1.35}
+.bus-service-card a{
+  border:1px solid var(--line);border-radius:9px;padding:7px 8px;text-decoration:none;color:var(--ink);font-size:.74rem;
+}
+.small-note{font-size:.75rem;color:var(--muted);line-height:1.4}
+.hotel-head{background:#7c2d12}
+.hotel-address{padding:16px 18px 4px;font-weight:750;line-height:1.45}
+.hotel-dialog .reference-info{padding:0 18px;margin:8px 0 12px}
+.hotel-route-grid{padding:0 14px 16px;display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.hotel-route-btn{
+  min-height:96px;border:1px solid var(--line);background:var(--panel-2);color:var(--ink);
+  border-radius:14px;text-decoration:none;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:3px;text-align:center;font-size:1.25rem;
+}
+.hotel-route-btn strong{font-size:.9rem}.hotel-route-btn span{font-size:.7rem;color:var(--muted)}
+.hotel-route-btn.transit{border-color:#9ec5fe}
+.hotel-route-btn.taxi{border-color:#f5c26b}
+@media(max-width:640px){
+  .bus-btn{width:38px;height:38px}
+  .mobility-actions{grid-template-columns:1fr}
+  .hotel-transit-card{grid-template-columns:1fr}
+  .hotel-transit-card button{grid-column:1;grid-row:auto}
+}
