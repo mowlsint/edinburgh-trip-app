@@ -107,7 +107,7 @@ async function loadData(){
   buildEmergency();
   buildTransit();
   applyFilters();
-  document.getElementById("statusText").textContent = "Datenstand v1.1 · App v0.1.3";
+  document.getElementById("statusText").textContent = "Datenstand v1.1 · App v0.1.4";
   setTimeout(() => map.invalidateSize({pan:false}), 80);
   setTimeout(() => map.invalidateSize({pan:false}), 500);
 }
@@ -429,14 +429,47 @@ document.getElementById("clearBtn").addEventListener("click",()=>{
   document.querySelectorAll(".chip.active").forEach(x=>x.classList.remove("active"));
   applyFilters();
 });
+
+let modalScrollY = 0;
+
+function openModal(modal){
+  if(!modal) return;
+  modalScrollY = window.scrollY || window.pageYOffset || 0;
+  document.body.style.top = `-${modalScrollY}px`;
+  document.body.classList.add("modal-open");
+  modal.classList.add("is-open");
+  modal.setAttribute("aria-hidden","false");
+  const close = modal.querySelector(".close-btn");
+  setTimeout(()=>close?.focus({preventScroll:true}), 30);
+}
+
+function closeModal(modal){
+  if(!modal) return;
+  modal.classList.remove("is-open");
+  modal.setAttribute("aria-hidden","true");
+  document.body.classList.remove("modal-open");
+  document.body.style.top = "";
+  window.scrollTo(0, modalScrollY);
+}
+
+function installModalDismiss(modal){
+  if(!modal) return;
+  modal.addEventListener("pointerup", e=>{
+    if(e.target === modal) closeModal(modal);
+  });
+  modal.addEventListener("touchend", e=>{
+    if(e.target === modal) closeModal(modal);
+  }, {passive:true});
+}
+
 const busDialog = document.getElementById("busDialog");
-document.getElementById("busBtn").addEventListener("click",()=>busDialog.showModal());
-document.getElementById("closeBusBtn").addEventListener("click",()=>busDialog.close());
+document.getElementById("busBtn").addEventListener("click",()=>openModal(busDialog));
+document.getElementById("closeBusBtn").addEventListener("click",()=>closeModal(busDialog));
 document.getElementById("busToHotelBtn").addEventListener("click",()=>routeToHotel("transit"));
 
 const hotelDialog = document.getElementById("hotelDialog");
-document.getElementById("floatingHotelBtn").addEventListener("click",()=>hotelDialog.showModal());
-document.getElementById("closeHotelBtn").addEventListener("click",()=>hotelDialog.close());
+document.getElementById("floatingHotelBtn").addEventListener("click",()=>openModal(hotelDialog));
+document.getElementById("closeHotelBtn").addEventListener("click",()=>closeModal(hotelDialog));
 document.querySelectorAll(".hotel-route-btn[data-mode]").forEach(btn=>{
   btn.addEventListener("click",()=>routeToHotel(btn.dataset.mode));
 });
@@ -445,8 +478,17 @@ document.getElementById("hotelMapBtn").addEventListener("click",()=>{
 });
 
 const dialog=document.getElementById("emergencyDialog");
-["emergencyBtn","floatingEmergencyBtn"].forEach(id=>document.getElementById(id).addEventListener("click",()=>dialog.showModal()));
-document.getElementById("closeEmergencyBtn").addEventListener("click",()=>dialog.close());
+["emergencyBtn","floatingEmergencyBtn"].forEach(id=>document.getElementById(id).addEventListener("click",()=>openModal(dialog)));
+document.getElementById("closeEmergencyBtn").addEventListener("click",()=>closeModal(dialog));
+
+
+[busDialog, hotelDialog, dialog].forEach(installModalDismiss);
+
+document.addEventListener("keydown", e=>{
+  if(e.key !== "Escape") return;
+  const open = [dialog, hotelDialog, busDialog].find(m=>m?.classList.contains("is-open"));
+  if(open) closeModal(open);
+});
 
 loadData().catch(err=>{
   console.error(err);

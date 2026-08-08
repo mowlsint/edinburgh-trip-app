@@ -16,7 +16,7 @@
   <link rel="preconnect" href="https://tile.openstreetmap.org">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
         integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
-  <link rel="stylesheet" href="styles.css?v=0.1.3">
+  <link rel="stylesheet" href="styles.css?v=0.1.4">
 </head>
 <body>
   <header class="topbar">
@@ -99,13 +99,15 @@
   </div>
 
 
-  <dialog id="busDialog" class="emergency-dialog mobility-dialog">
+  <div id="busDialog" class="modal-overlay emergency-dialog mobility-dialog" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="modal-surface">
+
     <div class="dialog-head">
       <div>
         <div class="eyebrow">Mobilität</div>
         <h2>Bus & Fahrpläne</h2>
       </div>
-      <button id="closeBusBtn" class="close-btn" aria-label="Schließen">×</button>
+      <button id="closeBusBtn" class="close-btn" aria-label="Schließen"><span aria-hidden="true">×</span><b>Schließen</b></button>
     </div>
 
     <div class="mobility-intro">
@@ -130,15 +132,18 @@
       <div id="busServiceList"></div>
       <p class="small-note">Für die Reise 2027 werden die Linien kurz vorher erneut geprüft.</p>
     </section>
-  </dialog>
+      </div>
+  </div>
 
-  <dialog id="hotelDialog" class="emergency-dialog hotel-dialog">
+  <div id="hotelDialog" class="modal-overlay emergency-dialog hotel-dialog" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="modal-surface">
+
     <div class="dialog-head hotel-head">
       <div>
         <div class="eyebrow">Schnell zurück</div>
         <h2>🏠 Alpha Guest House</h2>
       </div>
-      <button id="closeHotelBtn" class="close-btn" aria-label="Schließen">×</button>
+      <button id="closeHotelBtn" class="close-btn" aria-label="Schließen"><span aria-hidden="true">×</span><b>Schließen</b></button>
     </div>
     <div class="hotel-address">
       19 Old Dalkeith Road<br>
@@ -151,15 +156,18 @@
       <a class="hotel-route-btn taxi" href="tel:+441312292468">🚕<strong>Taxi</strong><span>Central Taxis anrufen</span></a>
       <button id="hotelMapBtn" class="hotel-route-btn map-only">📍<strong>Hotelkarte</strong><span>Ziel anzeigen</span></button>
     </div>
-  </dialog>
+      </div>
+  </div>
 
-  <dialog id="emergencyDialog" class="emergency-dialog">
+  <div id="emergencyDialog" class="modal-overlay emergency-dialog" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="modal-surface">
+
     <div class="dialog-head">
       <div>
         <div class="eyebrow">Emergency & Help</div>
         <h2>Notfall & Hilfe</h2>
       </div>
-      <button id="closeEmergencyBtn" class="close-btn" aria-label="Schließen">×</button>
+      <button id="closeEmergencyBtn" class="close-btn" aria-label="Schließen"><span aria-hidden="true">×</span><b>Schließen</b></button>
     </div>
 
     <div class="emergency-warning">
@@ -179,7 +187,8 @@
     </div>
 
     <div id="emergencySections"></div>
-  </dialog>
+      </div>
+  </div>
 
   <template id="poiTemplate">
     <article class="poi-card">
@@ -210,6 +219,6 @@
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
           integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
           crossorigin=""></script>
-  <script src="app.js?v=0.1.3"></script>
+  <script src="app.js?v=0.1.4"></script>
 </body>
 </html>
