@@ -16,7 +16,7 @@
   <link rel="preconnect" href="https://tile.openstreetmap.org">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
         integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
-  <link rel="stylesheet" href="styles.css?v=0.1.4">
+  <link rel="stylesheet" href="styles.css?v=0.1.5">
 </head>
 <body>
   <header class="topbar">
@@ -190,6 +190,24 @@
       </div>
   </div>
 
+
+  <div id="linksDialog" class="modal-overlay emergency-dialog links-dialog" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="modal-surface">
+      <div class="dialog-head">
+        <div>
+          <div class="eyebrow">Nützliche Links</div>
+          <h2 id="linksDialogTitle">Ort</h2>
+        </div>
+        <button id="closeLinksBtn" class="close-btn" aria-label="Schließen"><span aria-hidden="true">×</span><b>Schließen</b></button>
+      </div>
+      <div id="linksDialogMeta" class="links-dialog-meta"></div>
+      <div id="linksList" class="links-list"></div>
+      <div class="links-hint">
+        ✓ = direkt geprüfter Link. 🔎 = gezielte Suche, wenn noch keine verifizierte offizielle URL hinterlegt ist.
+      </div>
+    </div>
+  </div>
+
   <template id="poiTemplate">
     <article class="poi-card">
       <div class="poi-top">
@@ -211,7 +229,7 @@
       <div class="poi-actions">
         <button class="map-focus secondary">Auf Karte</button>
         <a class="maps-link ghost-link" target="_blank" rel="noopener">Navigation</a>
-        <a class="source-link ghost-link" target="_blank" rel="noopener">Quelle</a>
+        <button class="links-open ghost">🔗 Links</button>
       </div>
     </article>
   </template>
@@ -219,6 +237,6 @@
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
           integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
           crossorigin=""></script>
-  <script src="app.js?v=0.1.4"></script>
+  <script src="app.js?v=0.1.5"></script>
 </body>
 </html>

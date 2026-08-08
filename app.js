@@ -3,8 +3,11 @@ const CATEGORY_META = {
   restaurant:["🍽","Essen"], cemetery:["⚰️","Friedhöfe"], church:["⛪","Kirchen"],
   castle:["🏰","Burgen"], ruin:["🧱","Ruinen"], museum:["🏛","Museen"],
   shop:["🛍","Shops"], park:["🌳","Parks"], nature:["🌲","Natur"],
-  viewpoint:["🌄","Aussicht"], tour:["🚶","Touren"], experience:["✨","Erlebnisse"]
+  viewpoint:["🌄","Aussicht"], tour:["🚶","Touren"], experience:["✨","Erlebnisse"],
+  whimsical:["🔮","Whimsical"]
 };
+
+const CATEGORY_ORDER = ["whimsical","pub","whisky_bar","restaurant","cafe","shop","museum","cemetery","church","castle","ruin","park","nature","viewpoint","tour","experience"];
 
 let master = null;
 let emergency = null;
@@ -98,16 +101,16 @@ function safe(v,fallback="–"){ return (v===null || v===undefined || v==="") ? 
 
 async function loadData(){
   const [m,e,t] = await Promise.all([
-    fetch("data/edinburgh_master_v1_1.json").then(r=>r.json()),
-    fetch("data/emergency_contacts.json?v=0.1.3").then(r=>r.json()),
-    fetch("data/transit.json?v=0.1.3").then(r=>r.json())
+    fetch("data/edinburgh_master_v1_2.json?v=0.1.5").then(r=>r.json()),
+    fetch("data/emergency_contacts.json?v=0.1.5").then(r=>r.json()),
+    fetch("data/transit.json?v=0.1.5").then(r=>r.json())
   ]);
   master=m; emergency=e; transit=t; pois=m.pois || [];
   buildCategoryButtons();
   buildEmergency();
   buildTransit();
   applyFilters();
-  document.getElementById("statusText").textContent = "Datenstand v1.1 · App v0.1.4";
+  document.getElementById("statusText").textContent = "Datenstand v1.2 · App v0.1.5";
   setTimeout(() => map.invalidateSize({pan:false}), 80);
   setTimeout(() => map.invalidateSize({pan:false}), 500);
 }
@@ -115,8 +118,19 @@ async function loadData(){
 function buildCategoryButtons(){
   const host=document.getElementById("categoryButtons");
   const counts={};
-  pois.forEach(p=>counts[p.primary_category]=(counts[p.primary_category]||0)+1);
-  Object.keys(counts).sort((a,b)=>(CATEGORY_META[a]?.[1]||a).localeCompare(CATEGORY_META[b]?.[1]||b)).forEach(cat=>{
+  pois.forEach(p=>{
+    const cats=p.categories?.length ? p.categories : [p.primary_category];
+    cats.forEach(cat=>counts[cat]=(counts[cat]||0)+1);
+  });
+  Object.keys(counts).sort((a,b)=>{
+    const ai=CATEGORY_ORDER.indexOf(a), bi=CATEGORY_ORDER.indexOf(b);
+    if(ai!==-1 || bi!==-1){
+      if(ai===-1) return 1;
+      if(bi===-1) return -1;
+      return ai-bi;
+    }
+    return (CATEGORY_META[a]?.[1]||a).localeCompare(CATEGORY_META[b]?.[1]||b);
+  }).forEach(cat=>{
     const b=document.createElement("button");
     b.className="chip category-chip";
     b.dataset.category=cat;
@@ -144,7 +158,8 @@ function matchesQuickFilters(p){
 
 function applyFilters(){
   filtered=pois.filter(p=>{
-    if(activeCategories.size && !activeCategories.has(p.primary_category)) return false;
+    const cats=p.categories?.length ? p.categories : [p.primary_category];
+    if(activeCategories.size && ![...activeCategories].some(cat=>cats.includes(cat))) return false;
     return matchesQuickFilters(p);
   }).map(p=>({...p,_distance:referencePoint?km(referencePoint,{lat:p.lat,lon:p.lon}):null}));
 
@@ -187,12 +202,14 @@ function renderList(){
     if((p.historic_score_0_5||0)>=4) values.push("🏚 historisch");
     if((p.creepy_score_0_5||0)>=3) values.push("👻 düster");
     if(p.rain_option) values.push("🌧 Regen");
-    values.slice(0,6).forEach(t=>{ const s=document.createElement("span"); s.className="badge"; s.textContent=t; badges.appendChild(s); });
+    if((p.whimsical_score_0_5||0)>=3) values.push(`🔮 Whimsical ${p.whimsical_score_0_5}/5`);
+    values.slice(0,7).forEach(t=>{ const s=document.createElement("span"); s.className=t.startsWith("🔮")?"badge whimsical-badge":"badge"; s.textContent=t; badges.appendChild(s); });
     node.querySelector(".map-focus").onclick=()=>focusPoi(p);
     const maps=node.querySelector(".maps-link");
     maps.href=`https://www.openstreetmap.org/?mlat=${p.lat}&mlon=${p.lon}#map=17/${p.lat}/${p.lon}`;
-    const src=node.querySelector(".source-link");
-    if(p.source_url){src.href=p.source_url}else{src.remove()}
+    const linksBtn=node.querySelector(".links-open");
+    linksBtn.textContent=`🔗 Links · ${(p.links||[]).length}`;
+    linksBtn.onclick=()=>openPoiLinks(p);
     host.appendChild(node);
   });
 }
@@ -377,6 +394,48 @@ function buildEmergency(){
 }
 
 
+
+const LINK_META = {
+  homepage:["🌐","Homepage"],
+  info:["ℹ️","Info"],
+  menu:["🍽","Menü"],
+  booking:["📅","Buchen"],
+  tickets:["🎟","Tickets"],
+  shop:["🛍","Shop"],
+  readings:["🔮","Readings"],
+  events:["⭐","Events"],
+  map:["🗺","Karte"],
+  search:["🔎","Websuche"],
+  menu_search:["🔎","Menü suchen"],
+  tickets_search:["🔎","Tickets suchen"],
+  shop_search:["🔎","Shop suchen"]
+};
+
+function openPoiLinks(p){
+  const modal=document.getElementById("linksDialog");
+  const title=document.getElementById("linksDialogTitle");
+  const meta=document.getElementById("linksDialogMeta");
+  const host=document.getElementById("linksList");
+  title.textContent=p.name;
+  meta.textContent=[p.address, p.whimsical_type ? `Whimsical: ${p.whimsical_type.replaceAll("_"," ")}` : null]
+    .filter(Boolean).join(" · ");
+  host.innerHTML="";
+  const seen=new Set();
+  (p.links||[]).forEach(link=>{
+    if(!link?.url || seen.has(link.url)) return;
+    seen.add(link.url);
+    const a=document.createElement("a");
+    a.className=`useful-link${link.verified?" verified":""}`;
+    a.href=link.url;
+    a.target="_blank";
+    a.rel="noopener";
+    const m=LINK_META[link.type] || ["🔗",link.label||"Link"];
+    a.innerHTML=`<span class="link-icon">${m[0]}</span><span class="link-text"><span>${link.label||m[1]} ${link.verified?"✓":""}</span><small>${link.verified?"direkt geprüft":"gezielte Suche"}</small></span>`;
+    host.appendChild(a);
+  });
+  openModal(modal);
+}
+
 function applyTheme(theme){
   const value = theme === "dark" ? "dark" : "light";
   document.documentElement.dataset.theme = value;
@@ -481,12 +540,15 @@ const dialog=document.getElementById("emergencyDialog");
 ["emergencyBtn","floatingEmergencyBtn"].forEach(id=>document.getElementById(id).addEventListener("click",()=>openModal(dialog)));
 document.getElementById("closeEmergencyBtn").addEventListener("click",()=>closeModal(dialog));
 
+const linksDialog=document.getElementById("linksDialog");
+document.getElementById("closeLinksBtn").addEventListener("click",()=>closeModal(linksDialog));
 
-[busDialog, hotelDialog, dialog].forEach(installModalDismiss);
+
+[busDialog, hotelDialog, dialog, linksDialog].forEach(installModalDismiss);
 
 document.addEventListener("keydown", e=>{
   if(e.key !== "Escape") return;
-  const open = [dialog, hotelDialog, busDialog].find(m=>m?.classList.contains("is-open"));
+  const open = [linksDialog, dialog, hotelDialog, busDialog].find(m=>m?.classList.contains("is-open"));
   if(open) closeModal(open);
 });
 

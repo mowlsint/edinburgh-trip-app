@@ -273,3 +273,32 @@ body.modal-open{
   .close-btn b{display:none}
   .close-btn{width:46px;height:46px;padding:0 !important;border-radius:999px !important}
 }
+
+
+/* v0.1.5 – Whimsical + useful links */
+.links-dialog-meta{
+  padding:14px 16px 4px;color:var(--muted);font-size:.82rem;line-height:1.45;
+}
+.links-list{
+  padding:10px 14px 14px;display:grid;grid-template-columns:1fr 1fr;gap:8px;
+}
+.useful-link{
+  min-height:58px;border:1px solid var(--line);background:var(--panel-2);color:var(--ink);
+  text-decoration:none;border-radius:13px;padding:10px 12px;display:flex;align-items:center;
+  gap:10px;font-weight:750;
+}
+.useful-link .link-icon{font-size:1.25rem;flex:0 0 auto}
+.useful-link .link-text{display:flex;flex-direction:column;gap:2px}
+.useful-link small{color:var(--muted);font-size:.68rem;font-weight:500}
+.useful-link.verified{border-color:color-mix(in srgb, var(--accent) 55%, var(--line))}
+.links-hint{
+  margin:0 14px 16px;padding:10px 12px;border-radius:12px;background:var(--panel-2);
+  color:var(--muted);font-size:.72rem;line-height:1.4;
+}
+.whimsical-badge{
+  background:linear-gradient(135deg,var(--accent-2),var(--badge));
+  border:1px solid color-mix(in srgb,var(--accent) 35%,var(--line));
+}
+@media(max-width:560px){
+  .links-list{grid-template-columns:1fr}
+}
